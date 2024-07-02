@@ -1,6 +1,6 @@
 Classificator,Precision,Recall,F1
-XGBoost,0.89,0.75,0.82
-K-Nearest Neighbors,0.88,0.72,0.79
-Neural Network,0.87,0.67,0.76
-Logistic Regression,0.81,0.67,0.73
-Random Forest,0.88,0.7,0.78
+XGBoost,0.73,0.88,0.8
+K-Nearest Neighbors,0.74,0.76,0.75
+Logistic Regression,0.73,0.88,0.79
+Random Forest,0.73,0.86,0.79
+Neural Network,0.72,0.9,0.8
