@@ -10,7 +10,7 @@ Para acessar o dashboard, clique [aqui](https://app.powerbi.com/links/r_nIAcHmWH
 
 ### Descrição do Dashboard
 
-Nosso dashboard apresenta uma análise detalhada dos casos de dengue no estado da Bahia, Brasil, abrangendo o período de 2017 a 2024. As principais visualizações incluem resumos estatísticos, rankings por cidade, mapeamento geográfico e comparações temporais. A seguir, detalhamos cada uma dessas visualizações:
+Nosso dashboard apresenta uma análise detalhada dos casos de dengue no estado da Bahia, Brasil, abrangendo o período de 2016 a 2024. As principais visualizações incluem resumos estatísticos, rankings por cidade, mapeamento geográfico e comparações temporais. A seguir, detalhamos cada uma dessas visualizações:
 
 #### Cards de Resumo dos Dados
 Os cards de resumo fornecem uma visão geral dos principais indicadores, como o total de casos notificados, casos confirmados, óbitos, entre outros. Esses dados ajudam a identificar rapidamente o impacto da dengue na região.
@@ -27,7 +27,7 @@ O mapa interativo mostra a distribuição geográfica dos casos de dengue no est
 
 ![Mapa da Dengue](https://github.com/naiarawn/accs-ia-grupo-6/assets/115239281/37cf5b81-5f2f-46ec-a4b7-f6a02408092e)
 
-#### Notificações no Período (2017 - 2024)
+#### Notificações no Período (2016 - 2024)
 Esta seção apresenta um gráfico temporal das notificações de dengue, permitindo observar tendências e sazonalidades ao longo dos anos.
 
 ![Notificações no Período](https://github.com/naiarawn/accs-ia-grupo-6/assets/115239281/08cfa488-5d3e-420b-a546-8294cb6005a1)
