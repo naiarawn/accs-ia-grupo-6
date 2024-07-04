@@ -60,6 +60,12 @@ Ao utilizar o Drill Through, você terá acesso às seguintes informações:
 
   ![Sintomas Mais Comuns](https://github.com/naiarawn/accs-ia-grupo-6/assets/115239281/7ccbfbe3-de2c-4ce8-97e8-53304a237cf5)
 
+#### Filtros possíveis
+É possível filtrar por **Resultado do Diagnóstico**, **Cidades da Bahia**, **Período dos Registros**.
+
+![image](https://github.com/naiarawn/accs-ia-grupo-6/assets/115239281/55d9635a-4bbd-4962-b857-6af92346b0ca)
+
+
 ### Conclusão
 Nosso dashboard oferece uma ferramenta poderosa para monitorar e analisar a situação da dengue na Bahia. Ele é essencial para os profissionais de saúde, pesquisadores e autoridades, permitindo uma resposta mais eficaz e informada na luta contra a dengue.
 
