@@ -62,3 +62,145 @@ Ao utilizar o Drill Through, você terá acesso às seguintes informações:
 
 ### Conclusão
 Nosso dashboard oferece uma ferramenta poderosa para monitorar e analisar a situação da dengue na Bahia. Ele é essencial para os profissionais de saúde, pesquisadores e autoridades, permitindo uma resposta mais eficaz e informada na luta contra a dengue.
+
+# Pre-processamento de Dados de Dengue
+
+Este repositório contém um script para o pré-processamento de dados de dengue. O objetivo deste script é limpar e preparar os dados para análises posteriores, removendo valores nulos e aplicando condições específicas de validação.
+
+## Requisitos
+
+- pandas
+- numpy
+
+## Instruções
+
+1. **Leitura dos Dados**
+
+    O script inicia lendo um arquivo CSV contendo os dados de dengue.
+
+    ```python
+    import pandas as pd
+    import numpy as np
+
+    df_leitura = pd.read_csv('dengue_sinan.csv')
+    df = df_leitura
+    df.info()
+    ```
+
+2. **Remoção de Valores Nulos**
+
+    Campos obrigatórios são definidos e linhas com valores nulos nesses campos são removidas.
+
+    ```python
+    campos_obrigatorios = [
+        'ID_AGRAVO', 'DT_INVEST', 'FEBRE', 'MIALGIA', 'CEFALEIA', 'EXANTEMA',
+        'VOMITO', 'NAUSEA', 'DOR_COSTAS', 'CONJUNTVIT', 'ARTRITE', 'ARTRALGIA', 'PETEQUIA_N',
+        'LEUCOPENIA', 'LACO', 'DOR_RETRO', 'DIABETES', 'HEMATOLOG', 'HEPATOPAT', 'RENAL',
+        'HIPERTENSA', 'ACIDO_PEPT', 'AUTO_IMUNE'
+    ]
+
+    df.dropna(subset=campos_obrigatorios, inplace=True)
+    ```
+
+3. **Processamento de Campos Obrigatórios**
+
+    Função para processar campos obrigatórios, removendo valores nulos e filtrando valores específicos.
+
+    ```python
+    def process_campos_obrigatorios(df, columns):
+        for column in columns:
+            if column in df.columns:
+                df = df.dropna(subset=[column])
+                df = df[df[column].isin([1, 2])]
+        return df
+
+    campos_obrigatorios_12 = [
+        'FEBRE', 'MIALGIA', 'CEFALEIA', 'EXANTEMA',
+        'VOMITO', 'NAUSEA', 'DOR_COSTAS', 'CONJUNTVIT', 'ARTRITE', 'ARTRALGIA', 'PETEQUIA_N',
+        'LEUCOPENIA', 'LACO', 'DOR_RETRO', 'DIABETES', 'HEMATOLOG', 'HEPATOPAT', 'RENAL',
+        'HIPERTENSA', 'ACIDO_PEPT', 'AUTO_IMUNE'
+    ]
+
+    df = df[df['FEBRE'].isin([1, 2])]
+    df = process_campos_obrigatorios(df, campos_obrigatorios_12)
+    df.info()
+    ```
+
+4. **Validação de Campos Específicos**
+
+    Remoção de linhas com valores inválidos para os campos 'SOROTIPO' e 'CLASSI_FIN'.
+
+    ```python
+    df_sorotipo = df[~(((df['RESUL_VI_N'] == 1) | (df['RESUL_PCR_'] == 1)) & df['SOROTIPO'].isna())]
+    df_sorotipo = df_sorotipo[~((df_sorotipo['SOROTIPO'].notna()) & (df_sorotipo['RESUL_VI_N'] != 1) & (df_sorotipo['RESUL_PCR_'] != 1))]
+
+    df_classifin = df_sorotipo[~(df_sorotipo['DT_ENCERRA'].notna() & df_sorotipo['CLASSI_FIN'].isna())]
+    df_classifin = df_classifin[~((df_classifin['CLASSI_FIN'].isin([13])) & (df_classifin['ID_AGRAVO'] == 1))]
+    df_classifin = df_classifin[~((df_classifin['CLASSI_FIN'].isin([10, 11, 12])) & (df_classifin['ID_AGRAVO'] == 2))]
+    ```
+
+5. **Conversão de Datas**
+
+    Conversão de colunas de datas para o formato datetime.
+
+    ```python
+    date_columns = ['DT_ENCERRA', 'DT_SIN_PRI', 'DT_NASC', 'DT_INVEST']
+    for column in date_columns:
+        df_classifin[column] = pd.to_datetime(df_classifin[column], errors='coerce')
+    ```
+
+6. **Função de Validação e Limpeza de Dados**
+
+    Função para validar e limpar os dados de acordo com condições específicas para campos relacionados a agravos e PCR.
+
+    ```python
+    def data_pcr(df):
+        df['DT_SORO'] = pd.to_datetime(df['DT_SORO'], errors='coerce')
+        df['DT_NS1'] = pd.to_datetime(df['DT_NS1'], errors='coerce')
+        df['DT_ALRM'] = pd.to_datetime(df['DT_ALRM'], errors='coerce')
+        df['DT_VIRAL'] = pd.to_datetime(df['DT_VIRAL'], errors='coerce')
+        df['DT_PCR'] = pd.to_datetime(df['DT_PCR'], errors='coerce')
+
+        chik_condition = (df['ID_AGRAVO'] == 2)
+        dengue_condition = (df['ID_AGRAVO'] == 1)
+        viral_pcr_condition = (df['ID_AGRAVO'].isin([1, 2]))
+
+        fields_conditions = [
+            ('DT_PRNT', chik_condition),
+            ('RES_CHIKS1', chik_condition),
+            ('RES_CHIKS2', chik_condition),
+            ('RESUL_PRNT', chik_condition),
+            ('DT_SORO', dengue_condition & (df['DT_SORO'] >= df['DT_ALRM'])),
+            ('RESUL_SORO', dengue_condition),
+            ('DT_NS1', dengue_condition & (df['DT_NS1'] >= df['DT_ALRM'])),
+            ('RESUL_NS1', dengue_condition),
+            ('HISTOPA_N', dengue_condition),
+            ('IMUNOH_N', dengue_condition),
+            ('DT_VIRAL', viral_pcr_condition & (df['DT_VIRAL'] >= df['DT_ALRM'])),
+            ('RESUL_VI_N', viral_pcr_condition),
+            ('DT_PCR', viral_pcr_condition & (df['DT_PCR'] >= df['DT_ALRM'])),
+            ('RESUL_PCR_', viral_pcr_condition)
+        ]
+
+        for field, condition in fields_conditions:
+            df = df[~(condition & df[field].isna())]
+            df = df[~((~condition) & df[field].notna())]
+
+        return df
+
+    df_pcr = data_pcr(df_classifin)
+    df_pcr.describe()
+    ```
+
+7. **Salvamento dos Dados Processados**
+
+    O dataframe final é salvo em um arquivo CSV.
+
+    ```python
+    df_pcr.to_csv('result.csv')
+    ```
+
+## Conclusão
+
+Este script realiza um pré-processamento extensivo dos dados de dengue, garantindo que os dados estejam limpos e prontos para análises subsequentes. Ele remove valores nulos, aplica condições de validação específicas e converte colunas de datas para o formato adequado.
+
