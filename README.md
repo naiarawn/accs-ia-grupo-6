@@ -1,5 +1,5 @@
 # Grupo 6
-
+### Integrantes: Matheus Alves Guimarães, Pedro Henrique dos Santos, Breno Neves Falcão Soares, Lucas Longo Reboucas de Souza, João Pedro Leal Pinheiro, Naiara Barbosa Nogueira, Jean Victor
 ## Análise de Dados de Dengue na Bahia, Brasil
 
 ### Dashboard
